@@ -35,7 +35,8 @@ class Repo(object):
         '''
         Init the repo.
         
-        This likely won't be used at all.
+        This likely won't be used at all (Since clients should grab the latest version of the remote repo the first time they start, instead of creating their own).
+        
         '''
         if not path.lexists ( repodir ):
             mkdir (repodir)
