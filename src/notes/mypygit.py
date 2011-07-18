@@ -1,7 +1,7 @@
 '''
 Created on 2011-07-15
 
-@author: dl250074
+@author: Lugghawk and jenn0108
 '''
 import subprocess
 from os import path, mkdir
