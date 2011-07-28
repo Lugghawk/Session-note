@@ -8,7 +8,12 @@ if __name__ == '__main__':
     pass
 
 
-import mypygit
 
 
-repo = mypygit.Repo()
+
+import os, mypygit
+
+homedir = os.path.expanduser("~")
+repodir = os.path.normcase(homedir+"/sessionnotes/")
+
+repo = mypygit.Repo(repodir)
