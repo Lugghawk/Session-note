@@ -70,7 +70,7 @@ class Repo(object):
         
         if not os.path.lexists( repodir ):
             os.mkdir ( repodir )
-        cmd = self.gitLocation + ' clone ' + remoterepo
+        cmd = self.gitLocation + ' clone ' + remoterepo + " ." #Clone the repo into the remoterepo directory
         pipe = subprocess.Popen(cmd, cwd=repodir)
         pipe.wait()
         

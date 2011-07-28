@@ -16,4 +16,6 @@ import os, mypygit
 homedir = os.path.expanduser("~")
 repodir = os.path.normcase(homedir+"/sessionnotes/")
 
-repo = mypygit.Repo(repodir)
+remoteRepoDir = os.path.normcase(r"C:\SessionNotes\repo")
+
+repo = mypygit.Repo(repodir, remoteRepoDir)
