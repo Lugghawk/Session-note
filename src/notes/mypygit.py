@@ -4,7 +4,7 @@ Created on 2011-07-15
 @author: Lugghawk and jenn0108
 
 '''
-import subprocess,os,platform
+import subprocess,os,platform,logging
 
 class Repo(object):
     '''
@@ -12,22 +12,33 @@ class Repo(object):
     '''
         
     gitLocation = ''
+    log = logging.getLogger('repolog')
     
     def __init__(self, repopath, remoteRepo=None):
         '''
         Constructor
         '''
-        print "Repo class created at " + repopath or "<no path> given"
+        self.configureLogging()
+        Repo.log.debug( "Repo class created at " + repopath or "<no path> given" )
         try:
             Repo.gitLocation = self.findGit()
         except IOError:
-            print "Git Not Found"
+            Repo.log.critical("No git found")
             os.sys.exit(2)
         
         self.repoPath = repopath
         self.remoteRepo = remoteRepo
-        self.makeRepo()
         
+        if not self.repoExists():
+            self.makeRepo()
+        
+            
+        
+    
+    def configureLogging(self):
+        Repo.log.addHandler(logging.StreamHandler())
+        Repo.log.setLevel(logging.DEBUG)
+    
     def makeRepo(self):
         '''
         Simply checking for a .git directory in the current directory
@@ -35,11 +46,13 @@ class Repo(object):
                 
         if not os.path.lexists( self.repopath + "/.git")  :
             if self.remoterepo:
-                print "Cloning master repo: " + self.gitClone ()
+                Repo.log.debug("Cloning master repo: " + self.remoteRepo + ' to ' + self.repoPath)
+                self.gitClone()
             else:
-                print "Creating local repo: " + self.gitInit ()
+                Repo.log.debug("Creating local repo: " + self.repoPath)
+                self.gitInit()
         else:
-            print "Git repo in " + self.repopath + " exists"
+            Repo.log.info("Git repo in " + self.repopath + " exists")
             
 
     def gitInit (self):
@@ -56,7 +69,7 @@ class Repo(object):
         
         if not self.repoExists():
             # Even after we run the command and wait for it to complete, the .git directory in the target repository doesn't exist.
-            print "Git repo doesn't exist after 'git init' invoked. Do you not have git installed, or is it not in your path?"
+            Repo.log.critical( "Git repo doesn't exist after 'git init' invoked. Do you not have git installed, or is it not in your path?" )
             os.sys.exit(1) #Fail
         
         #If we don't exit in the if above, return the created repo directory
@@ -76,13 +89,20 @@ class Repo(object):
         
         if not self.repoExists():
             # Even after we run the command and wait for it to complete, the .git directory in the target repository doesn't exist.
-            print "Git repo doesn't exist after 'git clone' invoked. Do you not have git installed, or is it not in your path?"
+            Repo.log.critical( "Git repo doesn't exist after 'git clone' invoked. Do you not have git installed, or is it not in your path?" )
             os.sys.exit(1) #Fail
 
         return self.repoPath
         
-    def gitStatus(self, porcelain=True):
-        pass
+    def gitStatus(self):
+        '''
+        This command will return to the caller a list of the entries in git status.
+        It will always use the porcelain feature of git status (git status --porcelain)
+        It's up to the caller to handle the output.
+        '''
+        
+        cmd = 'status --porcelain'
+        return self.doGitCmd(cmd).split("\n")
     
     
     def doGitCmd(self, cmd):
@@ -131,10 +151,9 @@ class Repo(object):
             if gitFound and gitLocation.split("\\")[-1] == "git.cmd":
                 #We found a program to run. But it's git.cmd, according to later in the code, this is an issue.
                 #Copied the warning intended for this scenario.
-                import warnings
                 msg = "WARNING: Automatically switched to use git.cmd as git executable, which reduces performance by ~70%."
                 msg += "It's recommended to put git.exe into the PATH"
-                warnings.warn(msg)
+                Repo.log.warning(msg)
             elif not gitFound:
                 #Didn't find git.exe or git.cmd
                 raise IOError
