@@ -93,6 +93,22 @@ class Repo(object):
             os.sys.exit(1) #Fail
 
         return self.repoPath
+    
+    def gitPull(self):
+        '''
+        Right now this is just going to work with origin master. I may add branch support depending on whether session-note will need it (which I doubt).
+        '''
+        #raise NotImplementedError
+        cmd = 'pull origin master'
+        self.doGitCmd(cmd)
+        #TODO Add support for when a pull doesn't work.
+        #Potentially check the value of the self.doGitCmd() function (it returns stdout from the command) and see if there's a string we can search for.
+                
+    def gitPush (self):
+        cmd = 'push origin master'
+        self.doGitCmd(cmd)
+        #TODO Add support for when a push doesn't work.
+        #Potentially check the value of the self.doGitCmd() function (it returns stdout from the command) and see if there's a string we can search for.
         
     def gitStatus(self):
         '''
@@ -111,7 +127,7 @@ class Repo(object):
         It does the execution of git related commands. And returns the stdout from the command.
         '''
         cmd = Repo.gitLocation + ' ' + cmd.split(";")[0] #Split off any additional commands that may have gotten in.
-        pipe = subprocess.Popen()
+        pipe = subprocess.Popen(cmd, cwd=self.repoPath)
         pipe.wait()
         
         return pipe.stdout
