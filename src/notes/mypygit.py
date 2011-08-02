@@ -84,7 +84,7 @@ class Repo(object):
         
         if not self.checkRepoPath():
             self.makeRepoPath()
-        cmd = 'clone ' + self.remoteRepo + " ." #Clone the repo into the remoterepo directory
+        cmd = 'clone ' + self.remoteRepo + " " + self.repoPath #Clone the repo into the repoPath directory
         self.doGitCmd(cmd)
         
         if not self.repoExists():
