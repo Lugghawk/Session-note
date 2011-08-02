@@ -44,8 +44,8 @@ class Repo(object):
         Simply checking for a .git directory in the current directory
         '''
                 
-        if not os.path.lexists( self.repopath + "/.git")  :
-            if self.remoterepo:
+        if not os.path.lexists( self.repoPath + "/.git")  :
+            if self.remoteRepo:
                 Repo.log.debug("Cloning master repo: " + self.remoteRepo + ' to ' + self.repoPath)
                 self.gitClone()
             else:
@@ -84,7 +84,7 @@ class Repo(object):
         
         if not self.checkRepoPath():
             self.makeRepoPath()
-        cmd = 'clone ' + self.remoterepo + " ." #Clone the repo into the remoterepo directory
+        cmd = 'clone ' + self.remoteRepo + " ." #Clone the repo into the remoterepo directory
         self.doGitCmd(cmd)
         
         if not self.repoExists():
@@ -118,7 +118,7 @@ class Repo(object):
         '''
         
         cmd = 'status --porcelain'
-        return self.doGitCmd(cmd).split("\n")
+        return self.doGitCmd(cmd).split("\n") # Return a list seperated by a newline.
     
     
     def doGitCmd(self, cmd):
