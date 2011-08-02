@@ -64,7 +64,7 @@ class Repo(object):
         '''
         if not self.checkRepoPath():
             self.makeRepoPath()
-        cmd = 'init'
+        cmd = 'init ' + self.repoPath
         self.doGitCmd(cmd)
         
         if not self.repoExists():
