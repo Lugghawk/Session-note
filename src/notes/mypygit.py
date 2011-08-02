@@ -126,7 +126,8 @@ class Repo(object):
         This method does the commands passed to it by other methods in the Repo Class.
         It does the execution of git related commands. And returns the stdout from the command.
         '''
-        cmd = Repo.gitLocation + ' ' + cmd.split(";")[0] #Split off any additional commands that may have gotten in.
+        cmd = '"'+Repo.gitLocation+'"' + ' ' + cmd.split(";")[0] #Split off any additional commands that may have gotten in.
+        Repo.log.debug(cmd)
         pipe = subprocess.Popen(cmd, cwd=self.repoPath)
         pipe.wait()
         

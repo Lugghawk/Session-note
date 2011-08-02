@@ -7,10 +7,6 @@ Created on 2011-07-15
 if __name__ == '__main__':
     pass
 
-
-
-
-
 import os, mypygit
 
 homedir = os.path.expanduser("~")
