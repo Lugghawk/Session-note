@@ -25,14 +25,16 @@ class UI:
 
     def on_mainWindow_destroy (self,widget,data=None):
         gtk.main_quit()
-        
-    def row_selected(self,widget,data=None):
-        self.noteList.clear()
-        
-    def show_selectednote(self,widget,data=None):
-        print self.selectedNote.get_selected()
-        
     
+    def get_note_name(self, treeView, path):
+        #Pretty dirty way to return the value of the first column in the selected row
+        #This function takes a treeView object, and path object given to this function by a gtk event handler.
+        #It will return the value of the first (0) column, in the first element in the selected rows tuple.
+        #Selected_rows returns a tuple of the index of all rows selected. If one is selected, the 0th element is its index
+        return treeView.get_selection().get_selected_rows()[0][path[0]][0]
+    
+    def show_highlighted_note(self, treeview, path, view_column, userData=None):
+        print self.get_note_name(treeview,path)
     
     def __init__(self):
         #Set the gladefile
@@ -48,9 +50,9 @@ class UI:
             
         builder.connect_signals(self)
         
-        self.selectedNote = builder.get_object("noteListView").get_selection()
         
         
+              
         
     
 
