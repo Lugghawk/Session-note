@@ -14,8 +14,8 @@
     <property name="visible">True</property>
     <property name="border_width">6</property>
     <property name="title" translatable="yes">Test Window</property>
-    <property name="default_width">600</property>
-    <property name="default_height">400</property>
+    <property name="default_width">900</property>
+    <property name="default_height">600</property>
     <signal name="destroy" handler="on_mainWindow_destroy"/>
     <child>
       <object class="GtkVBox" id="vbox1">
@@ -36,6 +36,7 @@
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="invisible_char">&#x25CF;</property>
+                        <signal name="activate" handler="searchNotes"/>
                       </object>
                       <packing>
                         <property name="position">0</property>
@@ -47,6 +48,7 @@
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="receives_default">True</property>
+                        <signal name="clicked" handler="searchNotes"/>
                       </object>
                       <packing>
                         <property name="position">1</property>
@@ -245,12 +247,14 @@
                         <property name="can_focus">True</property>
                         <property name="hscrollbar_policy">automatic</property>
                         <property name="vscrollbar_policy">automatic</property>
+                        <property name="shadow_type">etched-in</property>
                         <child>
                           <object class="GtkTextView" id="noteView">
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                             <property name="border_width">5</property>
                             <property name="editable">False</property>
+                            <property name="cursor_visible">False</property>
                             <property name="buffer">noteBuffer</property>
                           </object>
                         </child>

@@ -38,6 +38,17 @@ class Repo(object):
     def configureLogging(self):
         Repo.log.addHandler(logging.StreamHandler())
         Repo.log.setLevel(logging.DEBUG)
+        
+    def gitGrep(self, searchString):
+        '''
+        Going to do case insensitive searching. And return a list of the files in the repo which contain the string.
+        '''
+        if searchString == '':
+            return None
+        cmd = 'grep -li ' + searchString
+        return self.doGitCmd(cmd).split("\n")
+        
+        
     
     def makeRepo(self):
         '''
@@ -127,11 +138,10 @@ class Repo(object):
         It does the execution of git related commands. And returns the stdout from the command.
         '''
         cmd = '"'+Repo.gitLocation+'"' + ' ' + cmd.split(";")[0] #Split off any additional commands that may have gotten in.
-        Repo.log.debug(cmd)
-        pipe = subprocess.Popen(cmd, cwd=self.repoPath)
+        Repo.log.debug("Command Executed: " + cmd)
+        pipe = subprocess.Popen(cmd, cwd=self.repoPath, stdout=subprocess.PIPE)
         pipe.wait()
-        
-        return pipe.stdout
+        return pipe.stdout.read()
     
     def makeRepoPath(self):
         try:
