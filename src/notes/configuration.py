@@ -13,6 +13,8 @@ class Configuration(object):
     user_email = ''
     user_name = ''
     
+    session_note_extension = 'ses'  #The extension on the session note
+    
     user_note_template = ''         #Path of the template used for notes.
     
     template_substitute_list = []   #A list of substitutes when a new note is created.
@@ -34,6 +36,13 @@ class Configuration(object):
         '''
         This constructor will be called when no configuration file can be found.
         '''
+        
+    def setRepoLocation(self, location):
+        self.session_note_repo_location = location
+        return self.session_note_repo_location
+    
+    def repoLocation(self):
+        return self.session_note_repo_location
         
         
         

@@ -4,7 +4,7 @@ Created on 2011-07-15
 @author: Lugghawk and jenn0108
 '''
 
-import os, mypygit,sys, ui
+import os, mypygit,sys, ui,configuration
 
 '''homedir = os.path.expanduser("~")
 repodir = os.path.normcase(homedir+"/sessionnotes/")
@@ -26,7 +26,9 @@ try:
 except:
     sys.exit(1)
   
-myUI = ui.UI()
+config = configuration.Configuration()
+config.setRepoLocation(os.path.normcase ("C:/SessionNotes/repo"))
+myUI = ui.UI(config)
 gtk.main()
     
     

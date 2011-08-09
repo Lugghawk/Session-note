@@ -6,7 +6,7 @@ Created on 2011-08-04
 http://matgnt.wordpress.com/2009/11/08/eclipse-pydev-and-gtk-with-code-completion/
 '''
 
-import sys
+import sys,configuration, os
 
 try:
     import pygtk
@@ -34,28 +34,61 @@ class UI:
         return treeView.get_selection().get_selected_rows()[0][path[0]][0]
     
     def show_highlighted_note(self, treeview, path, view_column, userData=None):
-        print self.get_note_name(treeview,path)
+        noteBuffer = self.builder.get_object("noteBuffer")
+#        print self.list_object_names()
+        note = open (self.configFile.repoLocation()+"\\" + str(self.get_note_name(treeview,path)) )
+        
+        noteBuffer.set_text(note.read())
     
-    def __init__(self):
+    def list_object_names(self):
+        objects = self.builder.get_objects()
+        for stuff in objects:
+            print stuff
+    
+    def __init__(self, config):
         #Set the gladefile
         filename = "main.glade"
-        builder = gtk.Builder()
-        builder.add_from_file(filename)
+        self.builder = gtk.Builder()
+        self.builder.add_from_file(filename)
         
-        self.window = builder.get_object("window1")
-        testList = [['Daves Note','Dave Lugg'],['Daves Note 2','Dave Lugg']]
-        self.noteList = builder.get_object("noteList")
-        for nodes in testList:
+        self.configFile = config
+        self.listNotes = []
+        self.createNoteList(self.configFile.repoLocation())
+        
+        self.window = self.builder.get_object("window1")
+        
+        self.noteList = self.builder.get_object("noteList")
+        
+        for nodes in self.listNotes:
             self.noteList.append(nodes)
+            pass
             
-        builder.connect_signals(self)
+        self.builder.connect_signals(self)
+    
+    def createNoteList(self,repoLocation):
+        '''
+        This method will create a list within a list of [Note Filename],[Author] pairs of each of the notes within the repository.
+        '''
+        dir = os.listdir(repoLocation)
+        for fname in dir:
+            if fname[-3:] == self.configFile.session_note_extension:
+                self.listNotes.append([fname, self.getNoteAuthor(fname)])
+            
+    def getNoteAuthor(self, noteName):
+        '''
+        Currently this will spread out the initials used in the session note filename.
+        This should be extended to take the template into account 
+        '''
+        authInitials = noteName.split("-")[1]
+        newInitials = ''
+        authInitials = authInitials.upper()
+        for chars in authInitials:
+            newInitials += chars +"."
+            
+        return newInitials
+             
         
         
-        
-              
+                  
         
     
-
-if __name__ == '__main__':
-    app = UI()
-    gtk.main()
