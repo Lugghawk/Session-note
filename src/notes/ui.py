@@ -127,6 +127,12 @@ class UI:
     def sanitize(self,string):
         raise NotImplementedError
         
+    def refreshNotes(self):
+        raise NotImplementedError
+    
+    def createNote(self):
+        raise NotImplementedError
+    
         
                   
         
