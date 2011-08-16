@@ -109,7 +109,6 @@ class UI:
         
         #searchString = searchString.replace(' ','/ ')
         searchString = '"' + searchString + '"'
-        print searchString
         noteList = self.repo.gitGrep(searchString)
         #for i in range (noteList.count('')):
         #    noteList.remove('')
@@ -124,6 +123,10 @@ class UI:
         else:
             self.populateNotes()
          
+    def createConfigDialog(self):
+        pass
+        
+        
     def sanitize(self,string):
         raise NotImplementedError
         

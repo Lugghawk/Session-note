@@ -140,8 +140,10 @@ class Repo(object):
         cmd = '"'+Repo.gitLocation+'"' + ' ' + cmd.split(";")[0] #Split off any additional commands that may have gotten in.
         Repo.log.debug("Command Executed: " + cmd)
         pipe = subprocess.Popen(cmd, cwd=self.repoPath, stdout=subprocess.PIPE)
-        pipe.wait()
-        return pipe.stdout.read()
+        output = pipe.communicate()[0]
+        return output
+        #return pipe.communicate()[1]
+        #return pipe.stdout.read()
     
     def makeRepoPath(self):
         try:
