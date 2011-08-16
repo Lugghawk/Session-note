@@ -13,7 +13,7 @@
   <object class="GtkWindow" id="mainWindow">
     <property name="visible">True</property>
     <property name="border_width">6</property>
-    <property name="title" translatable="yes">Test Window</property>
+    <property name="title" translatable="yes">Session Note</property>
     <property name="default_width">900</property>
     <property name="default_height">600</property>
     <signal name="destroy" handler="on_mainWindow_destroy"/>

@@ -50,14 +50,18 @@ class UI:
         filename = "main.glade"
         self.builder = gtk.Builder()
         self.builder.add_from_file(filename)
-        self.window = self.builder.get_object("window1")
+        self.configFile = config
+        self.listNotes = []
+        self.repo = mypygit.Repo(self.configFile.repoLocation())
+        
+        self.window = self.builder.get_object("mainWindow")
+        self.window.set_title(self.window.get_title() + " " + self.repo.repoPath)
         self.noteList = self.builder.get_object("noteList")
         self.builder.connect_signals(self)
         
-        self.configFile = config
-        self.listNotes = []
+
                 
-        self.repo = mypygit.Repo(self.configFile.repoLocation())
+        
         
         self.populateNotes()
             
