@@ -54,17 +54,13 @@ class UI:
         self.listNotes = []
         self.repo = mypygit.Repo(self.configFile.repoLocation())
         
-        self.window = self.builder.get_object("mainWindow")
-        self.window.set_title(self.window.get_title() + " " + self.repo.repoPath)
+        self.mainWindow = self.builder.get_object("mainWindow")
+        self.mainWindow.set_title(self.mainWindow.get_title() + " " + self.repo.repoPath)
         self.noteList = self.builder.get_object("noteList")
         self.builder.connect_signals(self)
         
-
-                
-        
-        
         self.populateNotes()
-            
+                   
 
         
     def populateNotes(self, notes=None):
@@ -127,9 +123,13 @@ class UI:
         else:
             self.populateNotes()
          
-    def createConfigDialog(self):
-        pass
-        
+    def createConfigDialog(self, entry, userData=None):
+        #pass
+        filename = "config.glade"
+        self.builder.add_from_file(filename)
+        self.configWindow = self.builder.get_object("configWindow")
+        self.configWindow.set_transient_for(self.mainWindow)
+        self.configWindow.set_visible(True)
         
     def sanitize(self,string):
         raise NotImplementedError

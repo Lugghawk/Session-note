@@ -29,7 +29,7 @@ class Repo(object):
         self.repoPath = repopath
         self.remoteRepo = remoteRepo
         
-        if not self.repoExists():
+        if not self.isRepoExist():
             self.makeRepo()
         
             
@@ -78,7 +78,7 @@ class Repo(object):
         cmd = 'init ' + self.repoPath
         self.doGitCmd(cmd)
         
-        if not self.repoExists():
+        if not self.isRepoExist():
             # Even after we run the command and wait for it to complete, the .git directory in the target repository doesn't exist.
             Repo.log.critical( "Git repo doesn't exist after 'git init' invoked. Do you not have git installed, or is it not in your path?" )
             os.sys.exit(1) #Fail
@@ -98,7 +98,7 @@ class Repo(object):
         cmd = 'clone ' + self.remoteRepo + " " + self.repoPath #Clone the repo into the repoPath directory
         self.doGitCmd(cmd)
         
-        if not self.repoExists():
+        if not self.isRepoExist():
             # Even after we run the command and wait for it to complete, the .git directory in the target repository doesn't exist.
             Repo.log.critical( "Git repo doesn't exist after 'git clone' invoked. Do you not have git installed, or is it not in your path?" )
             os.sys.exit(1) #Fail
@@ -142,8 +142,6 @@ class Repo(object):
         pipe = subprocess.Popen(cmd, cwd=self.repoPath, stdout=subprocess.PIPE)
         output = pipe.communicate()[0]
         return output
-        #return pipe.communicate()[1]
-        #return pipe.stdout.read()
     
     def makeRepoPath(self):
         try:
@@ -157,7 +155,7 @@ class Repo(object):
         else:
             return False
     
-    def repoExists(self):
+    def isRepoExist(self):
         return os.path.lexists ( self.repoPath + "/.git")
     
     def findGit(self):
