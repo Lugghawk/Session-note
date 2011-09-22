@@ -27,7 +27,6 @@
                 <property name="visible">True</property>
                 <child>
                   <object class="GtkVBox" id="vbox2">
-                    <property name="width_request">250</property>
                     <property name="height_request">300</property>
                     <property name="visible">True</property>
                     <property name="orientation">vertical</property>
@@ -46,6 +45,7 @@
                                 <property name="label" translatable="yes">Name:</property>
                               </object>
                               <packing>
+                                <property name="expand">False</property>
                                 <property name="fill">False</property>
                                 <property name="position">0</property>
                               </packing>
@@ -81,6 +81,7 @@
                                 <property name="label" translatable="yes">E-mail:</property>
                               </object>
                               <packing>
+                                <property name="expand">False</property>
                                 <property name="fill">False</property>
                                 <property name="position">0</property>
                               </packing>
@@ -123,19 +124,19 @@
                             <property name="justify">right</property>
                           </object>
                           <packing>
+                            <property name="expand">False</property>
                             <property name="fill">False</property>
                             <property name="position">0</property>
                           </packing>
                         </child>
                         <child>
                           <object class="GtkFileChooserButton" id="repoLocationField">
-                            <property name="width_request">150</property>
+                            <property name="width_request">175</property>
                             <property name="visible">True</property>
                             <property name="action">select-folder</property>
                           </object>
                           <packing>
                             <property name="expand">False</property>
-                            <property name="fill">False</property>
                             <property name="pack_type">end</property>
                             <property name="position">1</property>
                           </packing>
@@ -148,14 +149,43 @@
                       </packing>
                     </child>
                     <child>
-                      <placeholder/>
+                      <object class="GtkHBox" id="hbox9">
+                        <property name="visible">True</property>
+                        <child>
+                          <object class="GtkLabel" id="remoteRepositoryLabel">
+                            <property name="visible">True</property>
+                            <property name="label" translatable="yes">Remote Repository:</property>
+                          </object>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="fill">False</property>
+                            <property name="position">0</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkEntry" id="remoteRepositoryField">
+                            <property name="visible">True</property>
+                            <property name="can_focus">True</property>
+                            <property name="invisible_char">&#x25CF;</property>
+                          </object>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="fill">False</property>
+                            <property name="pack_type">end</property>
+                            <property name="position">1</property>
+                          </packing>
+                        </child>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="position">2</property>
+                      </packing>
                     </child>
                     <child>
                       <placeholder/>
                     </child>
                   </object>
                   <packing>
-                    <property name="expand">False</property>
                     <property name="padding">5</property>
                     <property name="position">0</property>
                   </packing>
@@ -265,7 +295,50 @@
                   </packing>
                 </child>
                 <child>
-                  <placeholder/>
+                  <object class="GtkVBox" id="vbox6">
+                    <property name="visible">True</property>
+                    <property name="orientation">vertical</property>
+                    <child>
+                      <object class="GtkHBox" id="hbox10">
+                        <property name="visible">True</property>
+                        <child>
+                          <object class="GtkLabel" id="label1">
+                            <property name="visible">True</property>
+                            <property name="label" translatable="yes">Note Extension: </property>
+                          </object>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="fill">False</property>
+                            <property name="position">0</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkEntry" id="noteExtensionField">
+                            <property name="visible">True</property>
+                            <property name="can_focus">True</property>
+                            <property name="max_length">5</property>
+                            <property name="invisible_char">&#x25CF;</property>
+                          </object>
+                          <packing>
+                            <property name="fill">False</property>
+                            <property name="pack_type">end</property>
+                            <property name="position">1</property>
+                          </packing>
+                        </child>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">False</property>
+                        <property name="position">0</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <placeholder/>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="position">1</property>
+                  </packing>
                 </child>
                 <child>
                   <placeholder/>

@@ -76,6 +76,7 @@
                         <property name="model">noteList</property>
                         <property name="headers_clickable">False</property>
                         <property name="enable_tree_lines">True</property>
+                        <signal name="select_cursor_row" handler="show_highlighted_note"/>
                         <signal name="row_activated" handler="show_highlighted_note"/>
                         <child>
                           <object class="GtkTreeViewColumn" id="treeviewcolumn1">

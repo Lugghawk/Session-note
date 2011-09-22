@@ -6,7 +6,12 @@ Created on 2011-08-04
 http://matgnt.wordpress.com/2009/11/08/eclipse-pydev-and-gtk-with-code-completion/
 '''
 
-import sys,configuration, os, mypygit, pickle, time
+import sys
+import configuration
+import os
+import mypygit
+import pickle
+import time
 
 try:
     import pygtk
@@ -22,7 +27,7 @@ except:
     
 class UI:
     
-    def on_mainWindow_destroy (self,widget,data=None):
+    def on_mainWindow_destroy (self, widget, data=None):
         gtk.main_quit()
     
     def get_note_name(self, treeView, path):
@@ -35,7 +40,7 @@ class UI:
     def show_highlighted_note(self, treeview, path, view_column, userData=None):
         #This will copy the text in the session note into noteBuffer and display it.
         noteBuffer = self.builder.get_object("noteBuffer")
-        note = open (self.configFile.repoLocation()+"\\" + str(self.get_note_name(treeview,path)) )
+        note = open (self.configuration.getRepoLocation() + "\\" + str(self.get_note_name(treeview, path)))
         
         noteBuffer.set_text(note.read())
     
@@ -48,14 +53,11 @@ class UI:
         self.configFilePath = "SNote.cfg"
         if os.path.isfile(self.configFilePath):
             
-            config = pickle.load(open(self.configFilePath,"r"))
+            config = pickle.load(open(self.configFilePath, "r"))
         else:
             config = None
             
         self.listNotes = []
-        
-        
-        
         
         #self.mainWindow.set_title(self.mainWindow.get_title() + " " + self.repo.repoPath)
         
@@ -63,7 +65,8 @@ class UI:
         if config:
             self.configuration = config
             self.repo = mypygit.Repo(self.configuration.getRepoLocation())
-            
+            self.setFieldValue("userEmailLabel", self.configuration.user_email)
+            self.setFieldValue("usernameLabel", self.configuration.user_name)
             self.populateNotes()   
         else:
             self.configuration = configuration.Configuration()    
@@ -94,7 +97,7 @@ class UI:
         self.builder.connect_signals(self)
         
         t2 = time.clock()
-        print 'Window creation took %0.3f ms' % ((t2-t1) * 1000.0)
+        print 'Window creation took %0.3f ms' % ((t2 - t1) * 1000.0)
         
 
             
@@ -111,10 +114,10 @@ class UI:
         else:
             #notes list was given
             for note in notes:
-                self.noteList.append([note,self.getNoteAuthor(note)])
+                self.noteList.append([note, self.getNoteAuthor(note)])
             
             
-    def createNoteList(self,repoLocation=None, list=None):
+    def createNoteList(self, repoLocation=None, list=None):
         '''
         This method will create a list within a list of [Note Filename],[Author] pairs of each of the notes within the repository.
         '''
@@ -135,7 +138,7 @@ class UI:
         newInitials = ''
         authInitials = authInitials.upper()
         for chars in authInitials:
-            newInitials += chars +"."
+            newInitials += chars + "."
             
         return newInitials
     
@@ -154,20 +157,13 @@ class UI:
         while (noteList.remove('')):
             pass
         
-        if noteList and searchString!='':
+        if noteList and searchString != '':
             self.populateNotes(noteList)
-        elif not noteList and searchString!= '':
+        elif not noteList and searchString != '':
             self.noteList.clear()
             
         else:
             self.populateNotes()
-    
-    
-            
-        
-    
-  
-
         
     def showConfigDialog(self, entry=None, userData=None):
         '''
@@ -179,26 +175,27 @@ class UI:
     def hideConfigDialog(self):
         self.configWindow.set_visible(False)
     
-    def saveConfigFromDialog(self,event,UserData=None):
+    def saveConfigFromDialog(self, event, UserData=None):
         #Called when the 'OK' button is clicked on the configuration dialog
-        print 'Saving config'
         #Populate the fields of self.configuration prior to writing it out to a file.
-        
-        #self.builder.get_object(object name)
-        
         self.configuration.user_name = self.getFieldValue("configNameField")
         self.configuration.user_email = self.getFieldValue("configEmailField")
-        
+        self.configuration.session_note_extension = self.getFieldValue("noteExtensionField")
         
         
         self.configuration.session_note_repo_location = self.getFileChooserValue("repoLocationField")
         self.configuration.text_editor_location = self.getFileChooserValue("editorPathChooser")
         self.configuration.user_note_template = self.getFileChooserValue("templateChooserButton")
+        
+        self.setFieldValue("userEmailLabel", self.configuration.user_email)
+        self.setFieldValue("usernameLabel", self.configuration.user_name)
+        
         if self.configuration.isValidConfiguration():
             self.writeConfigToPickledFile()
             self.populateNotes()
+            self.hideConfigDialog()
         
-    def getFileChooserValue(self,objectName):
+    def getFileChooserValue(self, objectName):
         #Returns a uri from a FileChooser in the UI. Strips the 'file:///' from the beginning.
         return self.builder.get_object(objectName).get_uri()[8:]
     
@@ -206,28 +203,29 @@ class UI:
     def getFieldValue(self, objectName):
         return self.builder.get_object(objectName).get_text()
     
-    def setFieldValue(self,objectName,value):
+    def setFieldValue(self, objectName, value):
         #Sets a text field value
         self.builder.get_object(objectName).set_text(value)
         
-    def setFileChooserValue(self,objectName,value):
+    def setFileChooserValue(self, objectName, value):
         #Sets the uri of a file chooser to the specific value
-        value = "file:///"+value
+        value = "file:///" + value
         self.builder.get_object(objectName).set_uri(value)
     
     def populateConfigDialog(self):
         '''
         Populate self.configWindow items with attributes from the configuration object.
         '''
-        self.setFieldValue("configNameField",self.configuration.user_name)
-        self.setFieldValue("configEmailField",self.configuration.user_email)
+        self.setFieldValue("configNameField", self.configuration.user_name)
+        self.setFieldValue("configEmailField", self.configuration.user_email)
+        self.setFieldValue("noteExtensionField", self.configuration.session_note_extension)
         
-        self.setFileChooserValue("repoLocationField",self.configuration.session_note_repo_location)
+        self.setFileChooserValue("repoLocationField", self.configuration.session_note_repo_location)
         self.setFileChooserValue("editorPathChooser", self.configuration.text_editor_location)
         self.setFileChooserValue("templateChooserButton", self.configuration.user_note_template)
         
         
-    def cancelConfig(self,event,UserData=None):
+    def cancelConfig(self, event, UserData=None):
         #print 'Cancelling config'
         if not self.configuration.isValidConfiguration():
             gtk.main_quit()
@@ -235,10 +233,11 @@ class UI:
     
     def writeConfigToPickledFile(self):
         pickleFile = open(self.configFilePath, "w")
-        pickle.dump(self.configuration,pickleFile)
-        pass
+        pickle.dump(self.configuration, pickleFile)
+        pickleFile.close()
+        
 
-    def sanitize(self,string):
+    def sanitize(self, string):
         raise NotImplementedError
         
     def refreshNotes(self):

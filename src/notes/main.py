@@ -4,7 +4,7 @@ Created on 2011-07-15
 @author: Lugghawk and jenn0108
 '''
 
-import os, mypygit,sys, ui,configuration, pickle
+import sys, ui
 
 '''homedir = os.path.expanduser("~")
 repodir = os.path.normcase(homedir+"/sessionnotes/")

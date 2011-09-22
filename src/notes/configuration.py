@@ -3,7 +3,6 @@ Created on 2011-08-02
 
 @author: dl250074
 '''
-import pickle, os
 
 class Configuration(object):
     '''
@@ -41,7 +40,7 @@ class Configuration(object):
         '''
         
     def isValidConfiguration(self):
-        if not self.user_email or not self.user_name:
+        if not self.user_email or not self.user_name or not self.session_note_extension or self.known_key != 'sessionnotekey':
             return False
         else:
             return True
