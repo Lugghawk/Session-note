@@ -4,7 +4,7 @@ Created on 2011-07-15
 @author: Lugghawk and jenn0108
 '''
 
-import os, mypygit,sys, ui,configuration
+import os, mypygit,sys, ui,configuration, pickle
 
 '''homedir = os.path.expanduser("~")
 repodir = os.path.normcase(homedir+"/sessionnotes/")
@@ -25,10 +25,10 @@ try:
     import gtk.glade
 except:
     sys.exit(1)
-  
-config = configuration.Configuration()
-config.setRepoLocation(os.path.normcase ("C:/SessionNotes/repo"))
-myUI = ui.UI(config)
+
+
+
+myUI = ui.UI()
 gtk.main()
     
     

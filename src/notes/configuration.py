@@ -3,6 +3,7 @@ Created on 2011-08-02
 
 @author: dl250074
 '''
+import pickle, os
 
 class Configuration(object):
     '''
@@ -10,6 +11,8 @@ class Configuration(object):
     Things like repo directories, template locations, and in-template substitutes.
     
     '''
+    
+    known_key = 'sessionnotekey'    #Poor attempt to validate the incoming configuration file.
     user_email = ''
     user_name = ''
     
@@ -34,14 +37,20 @@ class Configuration(object):
 
     def __init__(self):
         '''
-        This constructor will be called when no configuration file can be found.
+
         '''
         
+    def isValidConfiguration(self):
+        if not self.user_email or not self.user_name:
+            return False
+        else:
+            return True
+   
     def setRepoLocation(self, location):
         self.session_note_repo_location = location
         return self.session_note_repo_location
     
-    def repoLocation(self):
+    def getRepoLocation(self):
         return self.session_note_repo_location
         
         

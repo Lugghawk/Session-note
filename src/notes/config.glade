@@ -3,6 +3,8 @@
   <requires lib="gtk+" version="2.16"/>
   <!-- interface-naming-policy project-wide -->
   <object class="GtkWindow" id="configWindow">
+    <property name="width_request">400</property>
+    <property name="height_request">250</property>
     <property name="title" translatable="yes">Configuration</property>
     <property name="resizable">False</property>
     <property name="modal">True</property>
@@ -25,6 +27,8 @@
                 <property name="visible">True</property>
                 <child>
                   <object class="GtkVBox" id="vbox2">
+                    <property name="width_request">250</property>
+                    <property name="height_request">300</property>
                     <property name="visible">True</property>
                     <property name="orientation">vertical</property>
                     <property name="spacing">5</property>
@@ -42,6 +46,7 @@
                                 <property name="label" translatable="yes">Name:</property>
                               </object>
                               <packing>
+                                <property name="fill">False</property>
                                 <property name="position">0</property>
                               </packing>
                             </child>
@@ -76,11 +81,12 @@
                                 <property name="label" translatable="yes">E-mail:</property>
                               </object>
                               <packing>
+                                <property name="fill">False</property>
                                 <property name="position">0</property>
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkEntry" id="entry1">
+                              <object class="GtkEntry" id="configEmailField">
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="invisible_char">&#x25CF;</property>
@@ -111,24 +117,26 @@
                       <object class="GtkHBox" id="hbox6">
                         <property name="visible">True</property>
                         <child>
-                          <object class="GtkLabel" id="initialsLabel">
+                          <object class="GtkLabel" id="repoLocationLabel">
                             <property name="visible">True</property>
-                            <property name="label" translatable="yes">Initials:</property>
+                            <property name="label" translatable="yes">Git Repository: </property>
                             <property name="justify">right</property>
                           </object>
                           <packing>
+                            <property name="fill">False</property>
                             <property name="position">0</property>
                           </packing>
                         </child>
                         <child>
-                          <object class="GtkEntry" id="initialsField">
+                          <object class="GtkFileChooserButton" id="repoLocationField">
+                            <property name="width_request">150</property>
                             <property name="visible">True</property>
-                            <property name="can_focus">True</property>
-                            <property name="invisible_char">&#x25CF;</property>
+                            <property name="action">select-folder</property>
                           </object>
                           <packing>
                             <property name="expand">False</property>
                             <property name="fill">False</property>
+                            <property name="pack_type">end</property>
                             <property name="position">1</property>
                           </packing>
                         </child>
@@ -147,14 +155,15 @@
                     </child>
                   </object>
                   <packing>
+                    <property name="expand">False</property>
                     <property name="padding">5</property>
                     <property name="position">0</property>
                   </packing>
                 </child>
-                <child>
-                  <placeholder/>
-                </child>
               </object>
+              <packing>
+                <property name="tab_fill">False</property>
+              </packing>
             </child>
             <child type="tab">
               <object class="GtkLabel" id="personaTab">
@@ -166,7 +175,51 @@
               </packing>
             </child>
             <child>
-              <placeholder/>
+              <object class="GtkVBox" id="vbox3">
+                <property name="visible">True</property>
+                <property name="orientation">vertical</property>
+                <child>
+                  <object class="GtkHBox" id="hbox7">
+                    <property name="visible">True</property>
+                    <child>
+                      <object class="GtkLabel" id="textEditorLabel">
+                        <property name="visible">True</property>
+                        <property name="label" translatable="yes">Editor Path:</property>
+                      </object>
+                      <packing>
+                        <property name="fill">False</property>
+                        <property name="position">0</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkFileChooserButton" id="editorPathChooser">
+                        <property name="width_request">150</property>
+                        <property name="visible">True</property>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">False</property>
+                        <property name="pack_type">end</property>
+                        <property name="position">1</property>
+                      </packing>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">False</property>
+                    <property name="position">0</property>
+                  </packing>
+                </child>
+                <child>
+                  <placeholder/>
+                </child>
+                <child>
+                  <placeholder/>
+                </child>
+              </object>
+              <packing>
+                <property name="position">1</property>
+              </packing>
             </child>
             <child type="tab">
               <object class="GtkLabel" id="clientTab">
@@ -179,7 +232,48 @@
               </packing>
             </child>
             <child>
-              <placeholder/>
+              <object class="GtkVBox" id="vbox5">
+                <property name="visible">True</property>
+                <property name="orientation">vertical</property>
+                <child>
+                  <object class="GtkHBox" id="hbox8">
+                    <property name="visible">True</property>
+                    <child>
+                      <object class="GtkLabel" id="noteTemplateLocationLabel">
+                        <property name="visible">True</property>
+                        <property name="label" translatable="yes">Template Location:</property>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">False</property>
+                        <property name="position">0</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkFileChooserButton" id="templateChooserButton">
+                        <property name="visible">True</property>
+                      </object>
+                      <packing>
+                        <property name="pack_type">end</property>
+                        <property name="position">1</property>
+                      </packing>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="position">0</property>
+                  </packing>
+                </child>
+                <child>
+                  <placeholder/>
+                </child>
+                <child>
+                  <placeholder/>
+                </child>
+              </object>
+              <packing>
+                <property name="position">2</property>
+              </packing>
             </child>
             <child type="tab">
               <object class="GtkLabel" id="noteTab">
@@ -214,6 +308,7 @@
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">True</property>
+                    <signal name="clicked" handler="saveConfigFromDialog"/>
                   </object>
                   <packing>
                     <property name="expand">False</property>
@@ -229,6 +324,7 @@
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">True</property>
+                    <signal name="clicked" handler="cancelConfig"/>
                   </object>
                   <packing>
                     <property name="expand">False</property>

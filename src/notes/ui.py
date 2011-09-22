@@ -6,7 +6,7 @@ Created on 2011-08-04
 http://matgnt.wordpress.com/2009/11/08/eclipse-pydev-and-gtk-with-code-completion/
 '''
 
-import sys,configuration, os, mypygit
+import sys,configuration, os, mypygit, pickle, time
 
 try:
     import pygtk
@@ -22,7 +22,6 @@ except:
     
 class UI:
     
-
     def on_mainWindow_destroy (self,widget,data=None):
         gtk.main_quit()
     
@@ -45,24 +44,64 @@ class UI:
         for stuff in objects:
             print stuff
     
-    def __init__(self, config):
+    def __init__(self):
+        self.configFilePath = "SNote.cfg"
+        if os.path.isfile(self.configFilePath):
+            
+            config = pickle.load(open(self.configFilePath,"r"))
+        else:
+            config = None
+            
+        self.listNotes = []
+        
+        
+        
+        
+        #self.mainWindow.set_title(self.mainWindow.get_title() + " " + self.repo.repoPath)
+        
+        self.createWindows()
+        if config:
+            self.configuration = config
+            self.repo = mypygit.Repo(self.configuration.getRepoLocation())
+            
+            self.populateNotes()   
+        else:
+            self.configuration = configuration.Configuration()    
+            
+        if self.configuration.user_name:
+            self.populateConfigDialog()
+        else:
+            self.doConfig()
+        
+        
+        
+        
+        
+    def createWindows(self):
+        
+        t1 = time.clock()
         #Set the gladefile
         filename = "main.glade"
         self.builder = gtk.Builder()
         self.builder.add_from_file(filename)
-        self.configFile = config
-        self.listNotes = []
-        self.repo = mypygit.Repo(self.configFile.repoLocation())
-        
         self.mainWindow = self.builder.get_object("mainWindow")
-        self.mainWindow.set_title(self.mainWindow.get_title() + " " + self.repo.repoPath)
+        filename = "config.glade"
+        self.builder.add_from_file(filename)
+        self.configWindow = self.builder.get_object("configWindow")
+        self.configWindow.set_transient_for(self.mainWindow)
+        #self.configWindow.set_visible(True)
         self.noteList = self.builder.get_object("noteList")
         self.builder.connect_signals(self)
         
-        self.populateNotes()
-                   
-
+        t2 = time.clock()
+        print 'Window creation took %0.3f ms' % ((t2-t1) * 1000.0)
         
+
+            
+    def doConfig(self):
+        '''Show the configuration Dialog and let the user do the initial configuration'''
+        self.showConfigDialog()
+
     def populateNotes(self, notes=None):
         self.noteList.clear()
         if not notes:
@@ -82,7 +121,7 @@ class UI:
         dir = os.listdir(repoLocation)
         listNotes = []
         for fname in dir:
-            if fname[-3:] == self.configFile.session_note_extension:
+            if fname[-3:] == self.configuration.session_note_extension:
                 listNotes.append([fname, self.getNoteAuthor(fname)])
         return listNotes
         
@@ -122,15 +161,83 @@ class UI:
             
         else:
             self.populateNotes()
-         
-    def createConfigDialog(self, entry, userData=None):
-        #pass
-        filename = "config.glade"
-        self.builder.add_from_file(filename)
-        self.configWindow = self.builder.get_object("configWindow")
-        self.configWindow.set_transient_for(self.mainWindow)
-        self.configWindow.set_visible(True)
+    
+    
+            
         
+    
+  
+
+        
+    def showConfigDialog(self, entry=None, userData=None):
+        '''
+        Pops up the configuration window.
+        '''
+        self.configWindow.set_visible(True)
+        pass
+    
+    def hideConfigDialog(self):
+        self.configWindow.set_visible(False)
+    
+    def saveConfigFromDialog(self,event,UserData=None):
+        #Called when the 'OK' button is clicked on the configuration dialog
+        print 'Saving config'
+        #Populate the fields of self.configuration prior to writing it out to a file.
+        
+        #self.builder.get_object(object name)
+        
+        self.configuration.user_name = self.getFieldValue("configNameField")
+        self.configuration.user_email = self.getFieldValue("configEmailField")
+        
+        
+        
+        self.configuration.session_note_repo_location = self.getFileChooserValue("repoLocationField")
+        self.configuration.text_editor_location = self.getFileChooserValue("editorPathChooser")
+        self.configuration.user_note_template = self.getFileChooserValue("templateChooserButton")
+        if self.configuration.isValidConfiguration():
+            self.writeConfigToPickledFile()
+            self.populateNotes()
+        
+    def getFileChooserValue(self,objectName):
+        #Returns a uri from a FileChooser in the UI. Strips the 'file:///' from the beginning.
+        return self.builder.get_object(objectName).get_uri()[8:]
+    
+    
+    def getFieldValue(self, objectName):
+        return self.builder.get_object(objectName).get_text()
+    
+    def setFieldValue(self,objectName,value):
+        #Sets a text field value
+        self.builder.get_object(objectName).set_text(value)
+        
+    def setFileChooserValue(self,objectName,value):
+        #Sets the uri of a file chooser to the specific value
+        value = "file:///"+value
+        self.builder.get_object(objectName).set_uri(value)
+    
+    def populateConfigDialog(self):
+        '''
+        Populate self.configWindow items with attributes from the configuration object.
+        '''
+        self.setFieldValue("configNameField",self.configuration.user_name)
+        self.setFieldValue("configEmailField",self.configuration.user_email)
+        
+        self.setFileChooserValue("repoLocationField",self.configuration.session_note_repo_location)
+        self.setFileChooserValue("editorPathChooser", self.configuration.text_editor_location)
+        self.setFileChooserValue("templateChooserButton", self.configuration.user_note_template)
+        
+        
+    def cancelConfig(self,event,UserData=None):
+        #print 'Cancelling config'
+        if not self.configuration.isValidConfiguration():
+            gtk.main_quit()
+        self.hideConfigDialog()
+    
+    def writeConfigToPickledFile(self):
+        pickleFile = open(self.configFilePath, "w")
+        pickle.dump(self.configuration,pickleFile)
+        pass
+
     def sanitize(self,string):
         raise NotImplementedError
         
