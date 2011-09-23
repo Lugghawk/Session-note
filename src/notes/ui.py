@@ -12,6 +12,7 @@ import os
 import mypygit
 import pickle
 import time
+import subprocess
 
 try:
     import pygtk
@@ -30,6 +31,13 @@ class UI:
     def on_mainWindow_destroy (self, widget, data=None):
         gtk.main_quit()
     
+    def openNoteWithEditor (self,noteName):
+        
+        notePath = '"'+os.path.normcase(self.configuration.text_editor_location) + '" "' + os.path.normcase(noteName)+'"'
+        #print "Opening '"+notePath+"'"
+        #subprocess.call (notePath)
+        subprocess.Popen (notePath)
+    
     def get_note_name(self, treeView, path):
         #Pretty dirty way to return the value of the first column in the selected row
         #This function takes a treeView object, and path object given to this function by a gtk event handler.
@@ -40,9 +48,13 @@ class UI:
     def show_highlighted_note(self, treeview, path, view_column, userData=None):
         #This will copy the text in the session note into noteBuffer and display it.
         noteBuffer = self.builder.get_object("noteBuffer")
-        note = open (self.configuration.getRepoLocation() + "\\" + str(self.get_note_name(treeview, path)))
+        notePath = self.configuration.getRepoLocation() + "\\" + str(self.get_note_name(treeview, path))
         
-        noteBuffer.set_text(note.read())
+        
+        self.openNoteWithEditor(notePath)
+        #note = open (notePath)
+        #noteBuffer.set_text(note.read())
+        
     
     def list_object_names(self):
         objects = self.builder.get_objects()
@@ -75,9 +87,6 @@ class UI:
             self.populateConfigDialog()
         else:
             self.doConfig()
-        
-        
-        
         
         
     def createWindows(self):
@@ -184,7 +193,7 @@ class UI:
         
         
         self.configuration.session_note_repo_location = self.getFileChooserValue("repoLocationField")
-        self.configuration.text_editor_location = self.getFileChooserValue("editorPathChooser")
+        self.configuration.text_editor_location = self.getFileChooserValue("editorPathChooser").replace("%20"," ")
         self.configuration.user_note_template = self.getFileChooserValue("templateChooserButton")
         
         self.setFieldValue("userEmailLabel", self.configuration.user_email)
